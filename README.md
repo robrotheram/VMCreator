@@ -9,9 +9,9 @@ Standard KVM Libs
 ```
 sudo apt-get install qemu-kvm libvirt-bin virtinst bridge-utils cpu-checker```
 ```
-Cloud Libs needed 
+Cloud Libs and nmap (for IP scanning to see what host is up) needed 
 ```
-sudo apt-get install cloud-utils
+sudo apt-get install cloud-utils nmap
 ```
 
 ## using the script 
@@ -38,6 +38,6 @@ The Script also create a random mac address for you
 
 --ram (optional) set ram for the vm default is 1024
 
---user (optional) specify a cloud init script. If not provided it will auto generate
+--cloud (optional) specify a cloud init script. If not provided it will auto generate
 ```
 

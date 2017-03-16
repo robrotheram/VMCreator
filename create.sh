@@ -3,7 +3,7 @@
 usage() { echo "Usage: $0 [--host servername] [--network < br0 | virb0 > ] [--version <14.04 | 16.04 | 16.10 >] [--disk 8G ] [--cores 2] [--ram]" 1>&2; exit 1; }
 
 # Call getopt to validate the provided input.
-options=$(getopt -o h --long host: -o v --long version: -o n --long network: -o d --long disk: -o r --long ram: -o c --long cpu: -o u --long user: -- "$@")
+options=$(getopt -o h --long host: -o v --long version: -o n --long network: -o d --long disk: -o r --long ram: -o c --long cpu: -o cld --long cloud: -- "$@")
 [ $? -eq 0 ] || {
     echo "Incorrect options provided"
     exit 1
@@ -41,9 +41,9 @@ while true; do
          shift;
          RAM=$1
          ;;
-    --user)
+    --cloud)
          shift;
-         USER=$1
+         CLOUD_INT=$1
          ;;
     --)
         shift
@@ -93,7 +93,7 @@ echo "Creating DISK IMAGE"
 mkdir -p cloud/$HOST/config
 
 
-if [ -z "$USER" ]; then
+if [ -z "$CLOUD_INT" ]; then
 
   ssh-keygen -b 2048 -t rsa -f cloud/$HOST/config/sshkey -q -N ""
   key=$(cat cloud/$HOST/config/sshkey.pub)
@@ -114,7 +114,7 @@ users:
 EOF
 cloud-localds cloud/$HOST/seed.img cloud/$HOST/config/user_data
 else
-cloud-localds cloud/$HOST/seed.img  $USER
+cloud-localds cloud/$HOST/seed.img  $CLOUD_INT
 fi
 
 qemu-img convert -O qcow2 $IMG $DISKIMG_PATH
@@ -130,5 +130,17 @@ virt-install --vnc --noautoconsole --noreboot \
 --bridge=$NETWORK -m $macadd
 
 virsh start $HOST
+
+echo "Waiting 10 seconds"
+sleep 10
+case "$NETWORK" in
+        br0)
+          nmap -sP 192.168.0.0
+          ;;
+        virbr0)
+          net-dhcp-leases --network
+          ;;
+esac
+
 
 exit 0;
