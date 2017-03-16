@@ -1,22 +1,26 @@
-###Virtual Machine creater and Launcher
+# Virtual Machine creater and Launcher
 
-Small script to dynmically configure and create a Virtual Macheine from a cloud image and using cloud-init
+Small script to dynmically configure and create a Virtual Macheine from a cloud image and using cloud-init.
+Being a Bash novice I am sure there are ways to improve the script but I like the basic readablitiy of it so I can easily edit it later down the road. 
 
-##Dependacies
+## Dependacies
 
 Standard KVM Libs
 ```
 sudo apt-get install qemu-kvm libvirt-bin virtinst bridge-utils cpu-checker```
 ```
-Lib 
+Cloud Libs needed 
 ```
 sudo apt-get install cloud-utils
 ```
 
-##  
+## using the script 
 Downloads all the images
 ./getimages
 
+Create a VM
+if no cloud_init file is provided via the --user argument the script will autogenerate a pair of ssh key and a basic cloud init script
+The Script also create a random mac address for you
 
 ./create
 --host name for the vm 
