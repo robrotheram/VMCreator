@@ -117,18 +117,18 @@ else
 cloud-localds cloud/$HOST/seed.img  $USER
 fi
 
-#qemu-img convert -O qcow2 $IMG $DISKIMG_PATH
-#qemu-img resize $DISKIMG_PATH +$DISK
+qemu-img convert -O qcow2 $IMG $DISKIMG_PATH
+qemu-img resize $DISKIMG_PATH +$DISK
 
-#virt-install --vnc --noautoconsole --noreboot \
-#--name $HOST \
-#--ram $RAM \
-#--vcpu $CPU \
-#--disk path=$DISKIMG_PATH,format=qcow2 \
-#--cdrom cloud/$HOST/seed.img \
-#--boot=hd --livecd \
-#--bridge=$NETWORK -m $macadd
+virt-install --vnc --noautoconsole --noreboot \
+--name $HOST \
+--ram $RAM \
+--vcpu $CPU \
+--disk path=$DISKIMG_PATH,format=qcow2 \
+--cdrom cloud/$HOST/seed.img \
+--boot=hd --livecd \
+--bridge=$NETWORK -m $macadd
 
-#virsh start $HOST
+virsh start $HOST
 
 exit 0;
