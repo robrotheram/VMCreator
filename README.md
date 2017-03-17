@@ -41,3 +41,10 @@ The Script also create a random mac address for you
 --cloud (optional) specify a cloud init script. If not provided it will auto generate
 ```
 
+Cleanup
+Warning  this will remove all vms listed under `virsh list` Becareful its a rather large hammer for use by a lazy person
+
+```
+./cleanup.sh
+
+```
