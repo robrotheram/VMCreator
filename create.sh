@@ -135,7 +135,7 @@ virsh start $HOST
 
 case "$NETWORK" in
         br0)
-	   echo "Giving time for the network to stabilize"
+	   echo "Giving time for the network to stabilise"
            sleep 10
 	   echo "Querying Network"
            while [ -z "$HOST_IP" ]; do
