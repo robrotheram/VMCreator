@@ -1,5 +1,4 @@
 #!/bin/bash
-
 usage() { echo "Usage: $0 [--host servername] [--network < br0 | virb0 > ] [--version <14.04 | 16.04 | 16.10 >] [--disk 8G ] [--cores 2] [--ram]" 1>&2; exit 1; }
 
 # Call getopt to validate the provided input.
@@ -131,16 +130,29 @@ virt-install --vnc --noautoconsole --noreboot \
 
 virsh start $HOST
 
-echo "Waiting 10 seconds"
-sleep 10
 case "$NETWORK" in
         br0)
-          nmap -sP 192.168.0.0
+	   echo "Giving time for the network to stabilize"
+           sleep 10
+	   echo "Querying Network"
+           while [ -z "$HOST_IP" ]; do
+		echo "Waiting ..."
+                fping -a -q -g 192.168.0.0/24 > /dev/null 2>&1;
+		HOST_IP=$(arp  | grep -i $macadd | awk '{print $1}');
+		sleep 2;
+	   done
           ;;
         virbr0)
-          net-dhcp-leases --network
+          echo "Querying Network"
+          while [ -z "$HOST_IP" ]; do
+                echo "Waiting ..."
+	  	HOST_IP=$(virsh net-dhcp-leases --network default | grep -i $macadd | awk '{print $5}');
+	        sleep 2;
+	  done
+	  HOST_IP=${HOST_IP::-3}
           ;;
 esac
 
+echo "Host: $HOST | mac: $macadd | IP: $HOST_IP"
 
 exit 0;
