@@ -96,9 +96,12 @@ if [ -z "$CLOUD_INT" ]; then
 
   ssh-keygen -b 2048 -t rsa -f cloud/$HOST/config/sshkey -q -N ""
   key=$(cat cloud/$HOST/config/sshkey.pub)
+  HOSTNAME=$(echo $HOST | sed 's/[^a-zA-Z0-9]//g')
 
 cat > cloud/$HOST/config/user_data << EOF
 #cloud-config
+hostname: $HOSTNAME
+manage_etc_hosts: true
 users:
   - name: ubuntu
     groups: sudo
